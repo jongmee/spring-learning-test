@@ -14,7 +14,50 @@ public class QueryingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    /*
+    /**
+     * public <T> T queryForObject(String sql, Class<T> requiredType)
+     */
+    public int count() {
+        String sql = "select count(*) from customers";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+        if (count == null) {
+            return 0;
+        }
+        return count;
+    }
+
+    /**
+     * public <T> T queryForObject(String sql, Class<T> requiredType, @Nullable Object... args)
+     */
+    public String getLastName(Long id) {
+        String sql = "select last_name from customers where id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    /**
+     * public <T> T queryForObject(String sql, RowMapper<T> rowMapper, @Nullable Object... args)
+     */
+    public Customer findCustomerById(Long id) {
+        String sql = "select id, first_name, last_name from customers where id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id); // RowMapper도 사용 가능
+    }
+
+    /**
+     * public <T> List<T> query(String sql, RowMapper<T> rowMapper)
+     */
+    public List<Customer> findAllCustomers() {
+        String sql = "select id, first_name, last_name from customers";
+        return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
+    /**
+     * public <T> List<T> query(String sql, RowMapper<T> rowMapper, @Nullable Object... args)
+     */
+    public List<Customer> findCustomerByFirstName(String firstName) {
+        String sql = "select id, first_name, last_name from customers where first_name = ?";
+        return jdbcTemplate.query(sql, actorRowMapper, firstName);
+    }
+
     private final RowMapper<Customer> actorRowMapper = (resultSet, rowNum) -> {
         Customer customer = new Customer(
                 resultSet.getLong("id"),
@@ -23,49 +66,4 @@ public class QueryingDAO {
         );
         return customer;
     };
-    추후 rowMapper에 대해 학습해보고 이용해보기
-    */
-
-    /**
-     * public <T> T queryForObject(String sql, Class<T> requiredType)
-     */
-    public int count() {
-        //TODO : customers 디비에 포함되어있는 row가 몇개인지 확인하는 기능 구현
-        return 0;
-    }
-
-    /**
-     * public <T> T queryForObject(String sql, Class<T> requiredType, @Nullable Object... args)
-     */
-    public String getLastName(Long id) {
-        //TODO : 주어진 Id에 해당하는 customers의 lastName을 반환
-        return null;
-    }
-
-    /**
-     * public <T> T queryForObject(String sql, RowMapper<T> rowMapper, @Nullable Object... args)
-     */
-    public Customer findCustomerById(Long id) {
-        String sql = "select id, first_name, last_name from customers where id = ?";
-        //TODO : 주어진 Id에 해당하는 customer를 객체로 반환
-        return null;
-    }
-
-    /**
-     * public <T> List<T> query(String sql, RowMapper<T> rowMapper)
-     */
-    public List<Customer> findAllCustomers() {
-        String sql = "select id, first_name, last_name from customers";
-        //TODO : 저장된 모든 Customers를 list형태로 반환
-        return null;
-    }
-
-    /**
-     * public <T> List<T> query(String sql, RowMapper<T> rowMapper, @Nullable Object... args)
-     */
-    public List<Customer> findCustomerByFirstName(String firstName) {
-        String sql = "select id, first_name, last_name from customers where first_name = ?";
-        //TODO : firstName을 기준으로 customer를 list형태로 반환
-        return null;
-    }
 }
