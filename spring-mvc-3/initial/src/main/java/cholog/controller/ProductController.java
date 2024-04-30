@@ -1,6 +1,7 @@
 package cholog.controller;
 
 import cholog.exception.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +24,10 @@ public class ProductController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<String> handleNullPointerException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().build();
     }
 }
