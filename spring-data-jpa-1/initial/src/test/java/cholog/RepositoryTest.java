@@ -36,10 +36,10 @@ public class RepositoryTest {
 
     @Test
     void findById() {
-        entityManager.persist(new Customer("Jack", "Bauer"));
+        Customer saved = entityManager.merge(new Customer("Jack", "Bauer"));
         entityManager.persist(new Customer("Chloe", "O'Brian"));
 
-        Customer customer = customerRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
+        Customer customer = customerRepository.findById(saved.getId()).orElseThrow(IllegalArgumentException::new);
         assertThat(customer.getFirstName()).isEqualTo("Jack");
     }
 
