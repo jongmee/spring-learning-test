@@ -30,6 +30,9 @@ public class ManyToOneTest {
         Book book = new Book("책", publisher);
         entityManager.persist(book);
 
+        entityManager.flush();
+        entityManager.clear();
+
         Book persistBook = entityManager.find(Book.class, book.getId());
 
         assertThat(persistBook).isNotNull();
@@ -83,5 +86,22 @@ public class ManyToOneTest {
         Optional<Publisher> persistPublisher = publisherRepository.findById(publisher.getId());
         assertThat(persistPublisher).isPresent();
         assertThat(persistPublisher.get().getBooks()).isNotNull();
+    }
+
+    @Test
+    void findAll() {
+        Publisher publisher = new Publisher("출판사");
+        entityManager.persist(publisher);
+
+        Book book = new Book("책", publisher);
+        entityManager.persist(book);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Iterable<Publisher> persistPublishers = publisherRepository.findAll();
+        assertThat(persistPublishers).hasSize(1)
+                .extracting(Publisher::getId)
+                .isNotNull();
     }
 }
